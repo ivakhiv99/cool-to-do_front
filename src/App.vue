@@ -1,13 +1,16 @@
 <template>
-  <div>bruuuh</div>
+  <TicketList />
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import TicketList from "./components/TicketList.vue";
 
 export default defineComponent({
   name: "App",
-  components: {},
+  components: {
+    TicketList,
+  },
 });
 </script>
 
@@ -18,6 +21,11 @@ export default defineComponent({
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+}
+body {
+  margin: 0;
+}
+* {
+  box-sizing: border-box;
 }
 </style>
