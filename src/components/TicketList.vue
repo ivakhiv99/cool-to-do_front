@@ -1,34 +1,45 @@
 <template>
 	<div class="ticket_list_wrapper">
-		<Ticket
-			v-for="ticket in tickets"
-			:key="ticket.text"
-			:ticketData="ticket"
-		/>
+		<div v-if="!isLoading && tickets.length" class="">
+			<Ticket
+				v-for="ticket in tickets"
+				:key="ticket.text"
+				:ticketData="ticket"
+			/>
+		</div>
+		<div v-else-if="isLoading" class="loaderWrapper">
+			<p>Loading data...</p>
+		</div>
 	</div>
 </template>
 
 <script lang="ts">
+import { ref } from 'vue'
 import Ticket from './Ticket.vue'
+import TicketType from '../types/tickets'
 
 export default {
-	data() {
-		return {
-			tickets: [
-				{
-					text: 'learn Vue',
-					isDone: false,
-				},
-				{
-					text: 'learn Node',
-					isDone: false,
-				},
-				{
-					text: 'make a project',
-					isDone: false,
-				},
-			],
+	setup() {
+		const tickets = ref<TicketType[]>([])
+		const isLoading = ref(false)
+
+		const fetchTickets = async () => {
+			try {
+				isLoading.value = true
+				const res = await fetch('/api/all-tickets')
+				const parsedResult = await res.json()
+				isLoading.value = false
+				tickets.value = parsedResult
+				if (!res.ok) {
+					throw Error('something wrong :[')
+				}
+			} catch (err) {
+				console.error(err)
+			}
 		}
+		fetchTickets()
+
+		return { tickets, isLoading }
 	},
 	components: {
 		Ticket,
@@ -47,5 +58,10 @@ export default {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+
+	.loaderWrapper {
+		font-weight: 700;
+		color: #fff;
+	}
 }
 </style>

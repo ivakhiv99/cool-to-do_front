@@ -1,7 +1,9 @@
 <template>
 	<div class="ticket_item_wrapper">
 		<input type="checkbox" :checked="ticketData.isDone" />
-		<p>{{ ticketData.text }}</p>
+		<p :class="ticketData.isDone ? 'crossedText' : ''">
+			{{ ticketData.text }}
+		</p>
 	</div>
 </template>
 
@@ -25,12 +27,19 @@ export default {
 	align-items: center;
 
 	p {
+		color: #2c3e50;
 		font-size: 22px;
 		font-weight: 700;
 	}
 
+	.crossedText {
+		text-decoration: line-through;
+		color: #3e5871;
+	}
 	input[type='checkbox'] {
 		margin-right: 15px;
+		width: 20px;
+		height: 20px;
 	}
 }
 </style>
