@@ -1,6 +1,11 @@
 type TicketType = {
 	text: 'string'
 	isDone: boolean
+	_id: string
 }
 
-export default TicketType
+interface ITicketData extends TicketType {
+	bruh: string
+}
+
+export { TicketType, ITicketData }

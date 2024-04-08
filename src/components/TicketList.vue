@@ -16,7 +16,7 @@
 <script lang="ts">
 import { ref } from 'vue'
 import Ticket from './Ticket.vue'
-import TicketType from '../types/tickets'
+import { TicketType } from '../types/tickets'
 
 export default {
 	setup() {
