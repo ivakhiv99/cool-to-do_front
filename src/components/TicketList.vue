@@ -5,6 +5,7 @@
 				v-for="ticket in tickets"
 				:key="ticket.text"
 				:ticketData="ticket"
+				@ticketDeleted="refreshList"
 			/>
 		</div>
 		<div v-else-if="isLoading" class="loaderWrapper">
@@ -13,38 +14,32 @@
 	</div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { ref } from 'vue'
 import Ticket from './Ticket.vue'
 import { TicketType } from '../types/tickets'
 
-export default {
-	setup() {
-		const tickets = ref<TicketType[]>([])
-		const isLoading = ref(false)
+const tickets = ref<TicketType[]>([])
+const isLoading = ref(false)
 
-		const fetchTickets = async () => {
-			try {
-				isLoading.value = true
-				const res = await fetch('/api/all-tickets')
-				const parsedResult = await res.json()
-				isLoading.value = false
-				tickets.value = parsedResult
-				if (!res.ok) {
-					throw Error('something wrong :[')
-				}
-			} catch (err) {
-				console.error(err)
-			}
+const fetchTickets = async () => {
+	try {
+		isLoading.value = true
+		const res = await fetch('/api/all-tickets')
+		const parsedResult = await res.json()
+		isLoading.value = false
+		tickets.value = parsedResult
+		if (!res.ok) {
+			throw Error('something wrong :[')
 		}
-		fetchTickets()
-
-		return { tickets, isLoading }
-	},
-	components: {
-		Ticket,
-	},
+	} catch (err) {
+		console.error(err)
+	}
 }
+
+fetchTickets()
+
+const refreshList = () => fetchTickets()
 </script>
 
 <style lang="scss">

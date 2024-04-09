@@ -1,9 +1,18 @@
 <template>
 	<div class="ticket_item_wrapper">
-		<input type="checkbox" v-model="isChecked" @change="handleCheckbox" />
-		<p :class="isChecked ? 'crossedText' : ''">
-			{{ ticketData.text }}
-		</p>
+		<div class="ticket_item_content">
+			<input
+				type="checkbox"
+				v-model="isChecked"
+				@change="handleCheckbox"
+			/>
+			<p :class="isChecked ? 'crossedText' : ''">
+				{{ ticketData.text }}
+			</p>
+		</div>
+		<div>
+			<button @click="deleteTicket">delete</button>
+		</div>
 	</div>
 </template>
 
@@ -12,13 +21,14 @@ import { TicketType } from '../types/tickets'
 import { defineComponent, PropType, ref } from 'vue'
 
 export default defineComponent({
+	emits: ['ticketDeleted'],
 	props: {
 		ticketData: {
 			type: Object as PropType<TicketType>,
 			required: true,
 		},
 	},
-	setup(props) {
+	setup(props, { emit }) {
 		const isChecked = ref(props.ticketData.isDone)
 
 		const handleCheckbox = async () => {
@@ -43,7 +53,24 @@ export default defineComponent({
 			}
 		}
 
-		return { isChecked, handleCheckbox }
+		const deleteTicket = async () => {
+			try {
+				const res = await fetch(
+					`/api/remove-ticket/${props.ticketData._id}`,
+					{ method: 'DELETE' }
+				)
+				const data = await res.json()
+				if (!data.acknowledged) {
+					throw new Error('')
+				} else {
+					emit('ticketDeleted')
+				}
+			} catch (err) {
+				console.error('could not delete a ticket')
+			}
+		}
+
+		return { isChecked, handleCheckbox, deleteTicket }
 	},
 })
 </script>
@@ -58,19 +85,25 @@ export default defineComponent({
 	margin-bottom: 20px;
 
 	display: flex;
-	justify-content: flex-start;
+	justify-content: space-between;
 	align-items: center;
 
-	p {
-		color: #2c3e50;
-		font-size: 22px;
-		font-weight: 700;
+	.ticket_item_content {
+		display: flex;
+		align-items: center;
+
+		p {
+			color: #2c3e50;
+			font-size: 22px;
+			font-weight: 700;
+		}
+
+		.crossedText {
+			text-decoration: line-through;
+			color: #3e5871;
+		}
 	}
 
-	.crossedText {
-		text-decoration: line-through;
-		color: #3e5871;
-	}
 	input[type='checkbox'] {
 		margin-right: 15px;
 		width: 20px;
