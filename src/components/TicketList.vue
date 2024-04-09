@@ -38,6 +38,7 @@ const fetchTickets = async () => {
 }
 
 fetchTickets()
+// TODO: need to refresh when new ticket is created
 
 const refreshList = () => fetchTickets()
 </script>
@@ -45,9 +46,8 @@ const refreshList = () => fetchTickets()
 <style lang="scss">
 .ticket_list_wrapper {
 	width: 100%;
-	height: 100vh;
+	height: calc(100% - 150px);
 	padding: 50px 20px;
-	background-color: #2c3e50;
 
 	display: flex;
 	flex-direction: column;

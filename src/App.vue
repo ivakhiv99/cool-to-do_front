@@ -1,15 +1,15 @@
 <template>
-	<TicketList />
+	<AllTickets />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import TicketList from './components/TicketList.vue'
+import AllTickets from './views/AllTickets.vue'
 
 export default defineComponent({
 	name: 'App',
 	components: {
-		TicketList,
+		AllTickets,
 	},
 })
 </script>
